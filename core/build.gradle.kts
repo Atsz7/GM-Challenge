@@ -31,6 +31,12 @@ dependencies {
     // Okhttp
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+    
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
 
     // Hilt
     implementation(libs.hilt.android)

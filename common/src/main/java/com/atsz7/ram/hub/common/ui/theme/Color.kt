@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.ui.theme
+package com.atsz7.ram.hub.common.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Badge labels -->
+    <string name="badge_alive_label">Alive</string>
+    <string name="badge_dead_label">Dead</string>
+    <string name="badge_unknown_label">Unknown</string>
+
+</resources>
