@@ -12,6 +12,17 @@ interface CharactersDao {
     @Query("SELECT * FROM characters ORDER BY id ASC")
     fun getAll(): PagingSource<Int, CharacterEntity>
 
+    @Query(
+        """
+        SELECT * FROM characters
+        WHERE nameNormalized LIKE '%' || :term || '%'
+        ORDER BY
+            CASE WHEN nameNormalized LIKE :term || '%' THEN 0 ELSE 1 END,
+            id ASC
+        """
+    )
+    fun search(term: String): PagingSource<Int, CharacterEntity>
+
     @Query("SELECT COUNT(*) FROM characters")
     suspend fun count(): Int
 
