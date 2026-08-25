@@ -5,6 +5,6 @@ import com.atsz7.ram.hub.core.domain.model.Character
 import kotlinx.coroutines.flow.Flow
 
 interface CharactersRepository {
-    fun getCharacters(): Flow<PagingData<Character>>
+    fun getCharacters(query: String = ""): Flow<PagingData<Character>>
     fun requestForceRefresh()
 }

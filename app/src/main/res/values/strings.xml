@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">RamHub</string>
     <string name="retry">Retry</string>
+    <string name="no_search_results">No characters found</string>
 </resources>

@@ -6,4 +6,8 @@
     <string name="badge_dead_label">Dead</string>
     <string name="badge_unknown_label">Unknown</string>
 
+    <!-- Search -->
+    <string name="search_characters_hint">Search characters</string>
+    <string name="search_icon_cd">Search icon</string>
+
 </resources>

@@ -9,5 +9,7 @@ import javax.inject.Inject
 class GetCharactersUseCase @Inject constructor(
     private val repository: CharactersRepository
 ) {
-    operator fun invoke(): Flow<PagingData<Character>> = repository.getCharacters()
+    operator fun invoke(query: String = ""): Flow<PagingData<Character>> {
+        return repository.getCharacters(query)
+    }
 }

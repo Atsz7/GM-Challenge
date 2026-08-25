@@ -8,11 +8,14 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -26,7 +29,7 @@ class MainViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        every { getCharactersUseCase() } returns flowOf(PagingData.empty())
+        every { getCharactersUseCase(any()) } returns flowOf(PagingData.empty())
     }
 
     @After
@@ -36,15 +39,32 @@ class MainViewModelTest {
 
     @Suppress("UnusedFlow")
     @Test
-    fun `characters flow is initialized on creation`() {
+    fun `characters flow queries with an empty search by default`() = runTest {
+
+        // Given
+        val viewModel = MainViewModel(getCharactersUseCase, refreshCharactersUseCase)
 
         // When
-        MainViewModel(getCharactersUseCase, refreshCharactersUseCase)
+        viewModel.characters.first()
 
         // Then
-        verify {
-            getCharactersUseCase()
-        }
+        verify { getCharactersUseCase("") }
+    }
+
+    @Suppress("UnusedFlow")
+    @Test
+    fun `onSearchQueryChange updates searchQuery and re-queries characters`() = runTest {
+
+        // Given
+        val viewModel = MainViewModel(getCharactersUseCase, refreshCharactersUseCase)
+
+        // When
+        viewModel.onSearchQueryChange("Rick")
+        viewModel.characters.first()
+
+        // Then
+        assertEquals("Rick", viewModel.searchQuery.value)
+        verify { getCharactersUseCase("Rick") }
     }
 
     @Test
