@@ -12,9 +12,10 @@ import com.atsz7.ram.hub.core.data.mappers.toEntity
 import com.atsz7.ram.hub.core.data.remote.api.RamHubApi
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class CharacterRemoteMediator(
+class CharacterRemoteMediator @Inject constructor(
     private val ramHubApi: RamHubApi,
     private val database: RamHubDatabase
 ) : RemoteMediator<Int, CharacterEntity>() {
