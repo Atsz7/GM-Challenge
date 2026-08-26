@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.ui.main.models
+package com.atsz7.ram.hub.ui.main.screens.list.models
 
 enum class CharactersFilter {
     ALL,

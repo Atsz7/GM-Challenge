@@ -15,7 +15,8 @@ fun CharacterResult.toEntity(): CharacterEntity = CharacterEntity(
     gender = gender,
     originName = origin.name,
     locationName = location.name,
-    image = image
+    image = image,
+    created = created
 )
 
 fun CharacterEntity.toDomain(): Character = Character(
@@ -26,5 +27,6 @@ fun CharacterEntity.toDomain(): Character = Character(
     gender = gender,
     originName = originName,
     locationName = locationName,
-    imageUrl = image
+    imageUrl = image,
+    createdAt = created
 )

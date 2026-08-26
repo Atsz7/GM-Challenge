@@ -18,5 +18,6 @@ data class CharacterEntity(
     val gender: String,
     val originName: String,
     val locationName: String,
-    val image: String
+    val image: String,
+    val created: String
 )

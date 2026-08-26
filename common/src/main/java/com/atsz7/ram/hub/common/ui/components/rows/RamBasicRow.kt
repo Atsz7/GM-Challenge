@@ -1,6 +1,7 @@
 package com.atsz7.ram.hub.common.ui.components.rows
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,10 +46,13 @@ fun RamBasicRow(
     badge: RamBasicBadge,
     shape: Shape,
     isFavorite: Boolean,
-    onFavoriteToggle: () -> Unit
+    onFavoriteToggle: () -> Unit,
+    onClick: () -> Unit
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         shape = shape,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 1.dp

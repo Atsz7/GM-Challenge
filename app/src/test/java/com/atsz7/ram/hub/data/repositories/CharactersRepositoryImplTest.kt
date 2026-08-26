@@ -68,7 +68,8 @@ class CharactersRepositoryImplTest {
                 gender = "Male",
                 originName = "Earth",
                 locationName = "Earth",
-                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+                created = "2017-11-04T18:48:46.250Z"
             )
         )
         val pagingSourceFactory = characterEntities.asPagingSourceFactory()
@@ -112,7 +113,8 @@ class CharactersRepositoryImplTest {
                 gender = "Male",
                 originName = "Earth",
                 locationName = "Earth",
-                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+                created = "2017-11-04T18:48:46.250Z"
             )
         )
         val pagingSourceFactory = characterEntities.asPagingSourceFactory()
@@ -143,7 +145,8 @@ class CharactersRepositoryImplTest {
                 gender = "Male",
                 originName = "Earth",
                 locationName = "Earth",
-                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+                created = "2017-11-04T18:48:46.250Z"
             )
         )
         val pagingSourceFactory = characterEntities.asPagingSourceFactory()
@@ -172,6 +175,45 @@ class CharactersRepositoryImplTest {
         // Then
         verify { charactersDao.searchFavorites("rick") }
         verify(exactly = 0) { charactersDao.getFavorites() }
+    }
+
+    @Test
+    fun `getCharacterById maps the DAO's entity to a domain Character`() = runTest {
+
+        // Given
+        val characterEntity = CharacterEntity(
+            id = 1,
+            name = "Rick Sanchez",
+            nameNormalized = "rick sanchez",
+            status = "Alive",
+            specie = "Human",
+            type = "",
+            gender = "Male",
+            originName = "Earth",
+            locationName = "Earth",
+            image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+            created = "2017-11-04T18:48:46.250Z"
+        )
+        every { charactersDao.getCharacterById(1) } returns flowOf(characterEntity)
+
+        // When
+        val result = repository.getCharacterById(1).first()
+
+        // Then
+        assertEquals("Rick Sanchez", result?.name)
+    }
+
+    @Test
+    fun `getCharacterById emits null when the DAO has no matching entity`() = runTest {
+
+        // Given
+        every { charactersDao.getCharacterById(1) } returns flowOf(null)
+
+        // When
+        val result = repository.getCharacterById(1).first()
+
+        // Then
+        assertEquals(null, result)
     }
 
     @Test

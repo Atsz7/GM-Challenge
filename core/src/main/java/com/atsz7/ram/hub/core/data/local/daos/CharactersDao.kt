@@ -5,12 +5,16 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.atsz7.ram.hub.core.data.local.entities.CharacterEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharactersDao {
 
     @Query("SELECT * FROM characters ORDER BY id ASC")
     fun getAll(): PagingSource<Int, CharacterEntity>
+
+    @Query("SELECT * FROM characters WHERE id = :id")
+    fun getCharacterById(id: Int): Flow<CharacterEntity?>
 
     @Query(
         """
