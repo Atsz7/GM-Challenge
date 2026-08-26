@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,6 +53,7 @@ import com.atsz7.ram.hub.common.ui.components.rows.RamBasicRow
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
 import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.common.ui.components.bars.RamTopBar
 import com.atsz7.ram.hub.extensions.label
 import com.atsz7.ram.hub.ui.main.screens.list.actions.ListActions
 import com.atsz7.ram.hub.ui.main.screens.list.actions.rememberListActions
@@ -160,27 +159,23 @@ private fun ListTopBar(
     actions: ListActions,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    RamTopBar(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                start = RamHubTheme.dimens.mediumSize,
-                top = RamHubTheme.dimens.mediumSize,
-                end = RamHubTheme.dimens.mediumSize
+            .padding(horizontal = RamHubTheme.dimens.mediumSize)
+            .padding(top = RamHubTheme.dimens.mediumSize),
+        title = stringResource(R.string.app_name),
+        subtitle = stringResource(R.string.characters_subtitle),
+        actionIcon = {
+            RamCircleIconButton(
+                onClick = actions.onToggleDarkMode,
+                icon = if (isDarkMode) Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                contentDescription = stringResource(
+                    if (isDarkMode) CommonR.string.light_mode_cd else CommonR.string.dark_mode_cd
+                ),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            .height(RamHubTheme.dimens.extraExtraLargeSize),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RamCircleIconButton(
-            onClick = actions.onToggleDarkMode,
-            icon = if (isDarkMode) Icons.Filled.DarkMode else Icons.Filled.LightMode,
-            contentDescription = stringResource(
-                if (isDarkMode) CommonR.string.light_mode_cd else CommonR.string.dark_mode_cd
-            ),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+        }
+    )
 }
 
 @Composable

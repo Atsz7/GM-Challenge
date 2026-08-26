@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -41,6 +40,7 @@ import coil3.compose.SubcomposeAsyncImage
 import com.atsz7.ram.hub.R
 import com.atsz7.ram.hub.common.extensions.statusToBadge
 import com.atsz7.ram.hub.common.extensions.toFormattedDate
+import com.atsz7.ram.hub.common.ui.components.bars.RamTopBar
 import com.atsz7.ram.hub.common.ui.components.buttons.RamCircleIconButton
 import com.atsz7.ram.hub.common.ui.components.rows.StatusBadge
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
@@ -97,66 +97,33 @@ private fun DetailTopBar(
     actions: DetailActions,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(RamHubTheme.dimens.extraExtraLargeSize),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RamCircleIconButton(
-            onClick = actions.onBackClick,
-            icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-            contentDescription = stringResource(R.string.back_cd),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        if (createdAt != null) {
-            DetailCreatedHeader(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = RamHubTheme.dimens.smallSize),
-                createdAt = createdAt
-            )
-        } else {
-            Box(modifier = Modifier.weight(1f))
-        }
-
-        RamCircleIconButton(
-            onClick = actions.onToggleFavorite,
-            icon = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-            contentDescription = stringResource(
-                if (isFavorite) CommonR.string.remove_favorite_cd else CommonR.string.add_favorite_cd
-            ),
-            tint = if (isFavorite) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            }
-        )
-    }
-}
-
-@Composable
-private fun DetailCreatedHeader(
-    createdAt: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
+    RamTopBar(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(R.string.created_label),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            modifier = Modifier.padding(top = RamHubTheme.dimens.extraTinySize),
-            text = createdAt.toFormattedDate(),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+        title = stringResource(R.string.created_label),
+        subtitle = createdAt?.toFormattedDate(),
+        navigationIcon = {
+            RamCircleIconButton(
+                onClick = actions.onBackClick,
+                icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                contentDescription = stringResource(R.string.back_cd),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        actionIcon = {
+            RamCircleIconButton(
+                onClick = actions.onToggleFavorite,
+                icon = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = stringResource(
+                    if (isFavorite) CommonR.string.remove_favorite_cd else CommonR.string.add_favorite_cd
+                ),
+                tint = if (isFavorite) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+        }
+    )
 }
 
 @Composable
