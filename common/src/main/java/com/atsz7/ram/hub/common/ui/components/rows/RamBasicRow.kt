@@ -93,7 +93,7 @@ fun RamBasicRow(
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Icon(
                                 imageVector = Icons.Default.BrokenImage,
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.broken_image_cd),
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.size(RamHubTheme.dimens.largeSize)
                             )
