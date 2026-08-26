@@ -168,7 +168,7 @@ private fun ListTopBar(
         actionIcon = {
             RamCircleIconButton(
                 onClick = actions.onToggleDarkMode,
-                icon = if (isDarkMode) Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                icon = if (isDarkMode) Icons.Filled.LightMode else Icons.Filled.DarkMode,
                 contentDescription = stringResource(
                     if (isDarkMode) CommonR.string.light_mode_cd else CommonR.string.dark_mode_cd
                 ),
