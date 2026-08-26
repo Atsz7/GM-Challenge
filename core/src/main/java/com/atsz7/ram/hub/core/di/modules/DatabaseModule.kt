@@ -3,6 +3,7 @@ package com.atsz7.ram.hub.core.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.atsz7.ram.hub.core.data.local.daos.CharactersDao
+import com.atsz7.ram.hub.core.data.local.daos.FavoritesDao
 import com.atsz7.ram.hub.core.data.local.database.RamHubDatabase
 import dagger.Module
 import dagger.Provides
@@ -25,6 +26,11 @@ object DatabaseModule {
     @Provides
     fun provideCharactersDao(database: RamHubDatabase): CharactersDao {
         return database.charactersDao()
+    }
+
+    @Provides
+    fun provideFavoritesDao(database: RamHubDatabase): FavoritesDao {
+        return database.favoritesDao()
     }
 
     private const val DATABASE_NAME = "ram_hub.db"

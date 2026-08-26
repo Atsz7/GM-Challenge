@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,6 +30,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
+import com.atsz7.ram.hub.common.R
+import com.atsz7.ram.hub.common.extensions.color
+import com.atsz7.ram.hub.common.extensions.label
 import com.atsz7.ram.hub.common.ui.models.RamBasicBadge
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 
@@ -37,7 +43,9 @@ fun RamBasicRow(
     subtitle: String,
     imageUrl: String,
     badge: RamBasicBadge,
-    shape: Shape
+    shape: Shape,
+    isFavorite: Boolean,
+    onFavoriteToggle: () -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -106,6 +114,20 @@ fun RamBasicRow(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 StatusBadge(badge = badge)
+            }
+
+            IconButton(onClick = onFavoriteToggle) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = stringResource(
+                        if (isFavorite) R.string.remove_favorite_cd else R.string.add_favorite_cd
+                    ),
+                    tint = if (isFavorite) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
             }
         }
     }

@@ -23,6 +23,27 @@ interface CharactersDao {
     )
     fun search(term: String): PagingSource<Int, CharacterEntity>
 
+    @Query(
+        """
+        SELECT c.* FROM characters c
+        INNER JOIN favorites f ON f.characterId = c.id
+        ORDER BY c.id ASC
+        """
+    )
+    fun getFavorites(): PagingSource<Int, CharacterEntity>
+
+    @Query(
+        """
+        SELECT c.* FROM characters c
+        INNER JOIN favorites f ON f.characterId = c.id
+        WHERE c.nameNormalized LIKE '%' || :term || '%'
+        ORDER BY
+            CASE WHEN c.nameNormalized LIKE :term || '%' THEN 0 ELSE 1 END,
+            c.id ASC
+        """
+    )
+    fun searchFavorites(term: String): PagingSource<Int, CharacterEntity>
+
     @Query("SELECT COUNT(*) FROM characters")
     suspend fun count(): Int
 

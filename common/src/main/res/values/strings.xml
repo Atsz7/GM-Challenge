@@ -10,4 +10,8 @@
     <string name="search_characters_hint">Search characters</string>
     <string name="search_icon_cd">Search icon</string>
 
+    <!-- Favorites -->
+    <string name="add_favorite_cd">Add to favorites</string>
+    <string name="remove_favorite_cd">Remove from favorites</string>
+
 </resources>
