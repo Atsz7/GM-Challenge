@@ -14,4 +14,7 @@
     <string name="add_favorite_cd">Add to favorites</string>
     <string name="remove_favorite_cd">Remove from favorites</string>
 
+    <!-- Images -->
+    <string name="broken_image_cd">Image failed to load</string>
+
 </resources>

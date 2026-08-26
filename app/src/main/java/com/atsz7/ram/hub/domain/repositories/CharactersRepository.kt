@@ -12,6 +12,7 @@ interface CharactersRepository {
     ): Flow<PagingData<Character>>
 
     fun requestForceRefresh()
+    fun getCharacterById(id: Int): Flow<Character?>
     fun observeFavoriteIds(): Flow<Set<Int>>
     suspend fun toggleFavorite(id: Int, isFavorite: Boolean)
 }

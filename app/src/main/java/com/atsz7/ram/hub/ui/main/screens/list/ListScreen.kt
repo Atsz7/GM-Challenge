@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.ui.main.screens
+package com.atsz7.ram.hub.ui.main.screens.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,7 +26,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,41 +42,31 @@ import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
 import com.atsz7.ram.hub.core.domain.model.Character
 import com.atsz7.ram.hub.extensions.label
-import com.atsz7.ram.hub.ui.main.MainViewModel
-import com.atsz7.ram.hub.ui.main.models.CharactersFilter
+import com.atsz7.ram.hub.ui.main.screens.list.actions.ListActions
+import com.atsz7.ram.hub.ui.main.screens.list.actions.rememberListActions
+import com.atsz7.ram.hub.ui.main.screens.list.coordinator.ListCoordinator
+import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
+import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 
 @Composable
-fun MainScreen(
-    viewModel: MainViewModel
-) {
+fun ListScreen(coordinator: ListCoordinator) {
 
-    val characters = viewModel.characters.collectAsLazyPagingItems()
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val filter by viewModel.filter.collectAsState()
-    val favoriteIds by viewModel.favoriteIds.collectAsState()
+    val state by coordinator.uiState.collectAsState()
+    val characters = coordinator.characters.collectAsLazyPagingItems()
+    val actions = rememberListActions(coordinator)
 
-    MainScreen(
+    MainContent(
+        state = state,
         characters = characters,
-        searchQuery = searchQuery,
-        filter = filter,
-        favoriteIds = favoriteIds,
-        onSearchQueryChange = viewModel::onSearchQueryChange,
-        onFilterChange = viewModel::onFilterChange,
-        onPullToRefresh = viewModel::onPullToRefresh,
-        onToggleFavorite = viewModel::onToggleFavorite
+        actions = actions
     )
 }
 
 @Composable
-private fun MainScreen(
+private fun MainContent(
+    state: ListScreenState,
     characters: LazyPagingItems<Character>,
-    searchQuery: String,
-    filter: CharactersFilter,
-    favoriteIds: Set<Int>,
-    onSearchQueryChange: (String) -> Unit,
-    onFilterChange: (CharactersFilter) -> Unit,
-    onPullToRefresh: () -> Unit,
-    onToggleFavorite: (Int) -> Unit
+    actions: ListActions
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -87,8 +77,8 @@ private fun MainScreen(
                     horizontal = RamHubTheme.dimens.mediumSize,
                     vertical = RamHubTheme.dimens.smallSize
                 ),
-                query = searchQuery,
-                onQueryChange = onSearchQueryChange
+                query = state.searchQuery,
+                onQueryChange = actions.onSearchQueryChange
             )
 
             // Characters filter (All / Favorites)
@@ -96,19 +86,16 @@ private fun MainScreen(
                 modifier = Modifier.padding(
                     horizontal = RamHubTheme.dimens.mediumSize
                 ),
-                filter = filter,
-                onFilterChange = onFilterChange
+                filter = state.filter,
+                actions = actions
             )
 
             // Characters list
             CharactersListSection(
                 modifier = Modifier.weight(1f),
                 characters = characters,
-                searchQuery = searchQuery,
-                filter = filter,
-                favoriteIds = favoriteIds,
-                onPullToRefresh = onPullToRefresh,
-                onToggleFavorite = onToggleFavorite
+                state = state,
+                actions = actions
             )
         }
     }
@@ -117,7 +104,7 @@ private fun MainScreen(
 @Composable
 private fun CharactersFilterRow(
     filter: CharactersFilter,
-    onFilterChange: (CharactersFilter) -> Unit,
+    actions: ListActions,
     modifier: Modifier = Modifier
 ) {
     SingleChoiceSegmentedButtonRow(
@@ -132,7 +119,7 @@ private fun CharactersFilterRow(
                     count = CharactersFilter.entries.size
                 ),
                 selected = filter == entry,
-                onClick = { onFilterChange(entry) }
+                onClick = { actions.onFilterChange(entry) }
             ) {
                 Text(text = stringResource(id = entry.label))
             }
@@ -142,23 +129,28 @@ private fun CharactersFilterRow(
 
 @Composable
 private fun CharactersListSection(
-    modifier: Modifier = Modifier,
     characters: LazyPagingItems<Character>,
-    searchQuery: String,
-    filter: CharactersFilter,
-    favoriteIds: Set<Int>,
-    onPullToRefresh: () -> Unit,
-    onToggleFavorite: (Int) -> Unit
+    state: ListScreenState,
+    actions: ListActions,
+    modifier: Modifier = Modifier
 ) {
 
-    // Fresh LazyListState per query/filter resets scroll to top for new results.
-    val listState = remember(searchQuery, filter) { LazyListState() }
-    val isEmptyStateActive = searchQuery.isNotBlank() || filter.isFavorites()
+    // Fresh LazyListState per query/filter resets scroll to top for new results,
+    // while rememberSaveable keeps the scroll position across navigation (e.g. detail screen back).
+    val listState = rememberSaveable(
+        state.searchQuery,
+        state.filter,
+        saver = LazyListState.Saver
+    ) {
+        LazyListState()
+    }
+
+    val isEmptyStateActive = state.searchQuery.isNotBlank() || state.filter.isFavorites()
 
     PullToRefreshBox(
         isRefreshing = characters.loadState.refresh is LoadState.Loading,
         onRefresh = {
-            onPullToRefresh()
+            actions.onPullToRefresh()
             characters.refresh()
         },
         modifier = modifier.fillMaxSize()
@@ -188,8 +180,9 @@ private fun CharactersListSection(
                         imageUrl = character.imageUrl,
                         badge = character.status.statusToBadge(),
                         shape = shape,
-                        isFavorite = character.id in favoriteIds,
-                        onFavoriteToggle = { onToggleFavorite(character.id) }
+                        isFavorite = character.id in state.favoriteIds,
+                        onFavoriteToggle = { actions.onToggleFavorite(character.id) },
+                        onClick = { actions.onCharacterClick(character.id) }
                     )
 
                     if (index < characters.itemCount) {

@@ -5,4 +5,9 @@
     <string name="no_search_results">No characters found</string>
     <string name="filter_all_label">All</string>
     <string name="filter_favorites_label">Favorites</string>
+    <string name="back_cd">Back</string>
+    <string name="created_label">Created</string>
+    <string name="gender_label">Gender</string>
+    <string name="origin_label">Origin</string>
+    <string name="location_label">Location</string>
 </resources>

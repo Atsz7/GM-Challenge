@@ -1,11 +1,11 @@
-package com.atsz7.ram.hub.ui.main
+package com.atsz7.ram.hub.ui.main.screens.list
 
 import androidx.paging.PagingData
 import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
-import com.atsz7.ram.hub.ui.main.models.CharactersFilter
+import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -24,7 +24,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MainViewModelTest {
+class ListViewModelTest {
 
     private val getCharactersUseCase: GetCharactersUseCase = mockk()
     private val observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase = mockk()
@@ -39,7 +39,7 @@ class MainViewModelTest {
         every { observeFavoriteIdsUseCase() } returns flowOf(emptySet())
     }
 
-    private fun buildViewModel() = MainViewModel(
+    private fun buildViewModel() = ListViewModel(
         getCharactersUseCase,
         observeFavoriteIdsUseCase,
         refreshCharactersUseCase,
@@ -67,7 +67,7 @@ class MainViewModelTest {
 
     @Suppress("UnusedFlow")
     @Test
-    fun `onSearchQueryChange updates searchQuery and re-queries characters`() = runTest {
+    fun `onSearchQueryChange updates uiState searchQuery and re-queries characters`() = runTest {
 
         // Given
         val viewModel = buildViewModel()
@@ -77,13 +77,13 @@ class MainViewModelTest {
         viewModel.characters.first()
 
         // Then
-        assertEquals("Rick", viewModel.searchQuery.value)
+        assertEquals("Rick", viewModel.uiState.first { it.searchQuery == "Rick" }.searchQuery)
         verify { getCharactersUseCase("Rick", false) }
     }
 
     @Suppress("UnusedFlow")
     @Test
-    fun `onFilterChange updates filter and re-queries characters as favorites-only`() = runTest {
+    fun `onFilterChange updates uiState filter and re-queries characters as favorites-only`() = runTest {
 
         // Given
         val viewModel = buildViewModel()
@@ -93,7 +93,7 @@ class MainViewModelTest {
         viewModel.characters.first()
 
         // Then
-        assertEquals(CharactersFilter.FAVORITES, viewModel.filter.value)
+        assertEquals(CharactersFilter.FAVORITES, viewModel.uiState.first { it.filter == CharactersFilter.FAVORITES }.filter)
         verify { getCharactersUseCase("", true) }
     }
 
@@ -129,7 +129,7 @@ class MainViewModelTest {
         // Given
         every { observeFavoriteIdsUseCase() } returns flowOf(setOf(1))
         val viewModel = buildViewModel()
-        viewModel.favoriteIds.first { it.contains(1) }
+        viewModel.uiState.first { it.favoriteIds.contains(1) }
 
         // When
         viewModel.onToggleFavorite(id = 1)

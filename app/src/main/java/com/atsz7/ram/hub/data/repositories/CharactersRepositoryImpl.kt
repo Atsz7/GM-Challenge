@@ -73,6 +73,10 @@ class CharactersRepositoryImpl @Inject constructor(
         remoteMediator.forceRefresh = true
     }
 
+    override fun getCharacterById(id: Int): Flow<Character?> {
+        return charactersDao.getCharacterById(id).map { entity -> entity?.toDomain() }
+    }
+
     override fun observeFavoriteIds(): Flow<Set<Int>> {
         return favoritesDao.observeFavoriteIds().map { it.toSet() }
     }

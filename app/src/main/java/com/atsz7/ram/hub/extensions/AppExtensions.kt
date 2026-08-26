@@ -1,7 +1,7 @@
 package com.atsz7.ram.hub.extensions
 
 import com.atsz7.ram.hub.R
-import com.atsz7.ram.hub.ui.main.models.CharactersFilter
+import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 
 /**
  * Converts a [CharactersFilter] to string resource of [Int] type.
