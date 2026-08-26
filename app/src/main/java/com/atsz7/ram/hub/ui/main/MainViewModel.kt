@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
         .flatMapLatest { (query, filter) ->
             getCharactersUseCase(
                 query = query,
-                favoritesOnly = filter == CharactersFilter.FAVORITES
+                favoritesOnly = filter.isFavorites()
             )
         }
         .cachedIn(viewModelScope)

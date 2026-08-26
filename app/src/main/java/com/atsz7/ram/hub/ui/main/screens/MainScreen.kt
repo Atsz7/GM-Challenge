@@ -153,7 +153,7 @@ private fun CharactersListSection(
 
     // Fresh LazyListState per query/filter resets scroll to top for new results.
     val listState = remember(searchQuery, filter) { LazyListState() }
-    val isEmptyStateActive = searchQuery.isNotBlank() || filter == CharactersFilter.FAVORITES
+    val isEmptyStateActive = searchQuery.isNotBlank() || filter.isFavorites()
 
     PullToRefreshBox(
         isRefreshing = characters.loadState.refresh is LoadState.Loading,
