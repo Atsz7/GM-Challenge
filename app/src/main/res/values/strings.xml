@@ -3,4 +3,6 @@
     <string name="app_name">RamHub</string>
     <string name="retry">Retry</string>
     <string name="no_search_results">No characters found</string>
+    <string name="filter_all_label">All</string>
+    <string name="filter_favorites_label">Favorites</string>
 </resources>

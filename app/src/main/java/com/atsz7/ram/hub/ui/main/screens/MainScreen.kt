@@ -17,6 +17,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -38,7 +41,9 @@ import com.atsz7.ram.hub.common.ui.components.rows.RamBasicRow
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
 import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.extensions.label
 import com.atsz7.ram.hub.ui.main.MainViewModel
+import com.atsz7.ram.hub.ui.main.models.CharactersFilter
 
 @Composable
 fun MainScreen(
@@ -47,12 +52,18 @@ fun MainScreen(
 
     val characters = viewModel.characters.collectAsLazyPagingItems()
     val searchQuery by viewModel.searchQuery.collectAsState()
+    val filter by viewModel.filter.collectAsState()
+    val favoriteIds by viewModel.favoriteIds.collectAsState()
 
     MainScreen(
         characters = characters,
         searchQuery = searchQuery,
+        filter = filter,
+        favoriteIds = favoriteIds,
         onSearchQueryChange = viewModel::onSearchQueryChange,
-        onPullToRefresh = viewModel::onPullToRefresh
+        onFilterChange = viewModel::onFilterChange,
+        onPullToRefresh = viewModel::onPullToRefresh,
+        onToggleFavorite = viewModel::onToggleFavorite
     )
 }
 
@@ -60,11 +71,17 @@ fun MainScreen(
 private fun MainScreen(
     characters: LazyPagingItems<Character>,
     searchQuery: String,
+    filter: CharactersFilter,
+    favoriteIds: Set<Int>,
     onSearchQueryChange: (String) -> Unit,
-    onPullToRefresh: () -> Unit
+    onFilterChange: (CharactersFilter) -> Unit,
+    onPullToRefresh: () -> Unit,
+    onToggleFavorite: (Int) -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
+
+            // SearchView
             RamSearchView(
                 modifier = Modifier.padding(
                     horizontal = RamHubTheme.dimens.mediumSize,
@@ -73,12 +90,52 @@ private fun MainScreen(
                 query = searchQuery,
                 onQueryChange = onSearchQueryChange
             )
+
+            // Characters filter (All / Favorites)
+            CharactersFilterRow(
+                modifier = Modifier.padding(
+                    horizontal = RamHubTheme.dimens.mediumSize
+                ),
+                filter = filter,
+                onFilterChange = onFilterChange
+            )
+
+            // Characters list
             CharactersListSection(
                 modifier = Modifier.weight(1f),
                 characters = characters,
                 searchQuery = searchQuery,
-                onPullToRefresh = onPullToRefresh
+                filter = filter,
+                favoriteIds = favoriteIds,
+                onPullToRefresh = onPullToRefresh,
+                onToggleFavorite = onToggleFavorite
             )
+        }
+    }
+}
+
+@Composable
+private fun CharactersFilterRow(
+    filter: CharactersFilter,
+    onFilterChange: (CharactersFilter) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    SingleChoiceSegmentedButtonRow(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = RamHubTheme.dimens.smallSize)
+    ) {
+        CharactersFilter.entries.forEachIndexed { index, entry ->
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = CharactersFilter.entries.size
+                ),
+                selected = filter == entry,
+                onClick = { onFilterChange(entry) }
+            ) {
+                Text(text = stringResource(id = entry.label))
+            }
         }
     }
 }
@@ -88,12 +145,15 @@ private fun CharactersListSection(
     modifier: Modifier = Modifier,
     characters: LazyPagingItems<Character>,
     searchQuery: String,
-    onPullToRefresh: () -> Unit
+    filter: CharactersFilter,
+    favoriteIds: Set<Int>,
+    onPullToRefresh: () -> Unit,
+    onToggleFavorite: (Int) -> Unit
 ) {
 
-    // Fresh LazyListState per query resets scroll to top for new results.
-    val listState = remember(searchQuery) { LazyListState() }
-    val isSearchActive = searchQuery.isNotBlank()
+    // Fresh LazyListState per query/filter resets scroll to top for new results.
+    val listState = remember(searchQuery, filter) { LazyListState() }
+    val isEmptyStateActive = searchQuery.isNotBlank() || filter.isFavorites()
 
     PullToRefreshBox(
         isRefreshing = characters.loadState.refresh is LoadState.Loading,
@@ -127,7 +187,9 @@ private fun CharactersListSection(
                         subtitle = character.specie,
                         imageUrl = character.imageUrl,
                         badge = character.status.statusToBadge(),
-                        shape = shape
+                        shape = shape,
+                        isFavorite = character.id in favoriteIds,
+                        onFavoriteToggle = { onToggleFavorite(character.id) }
                     )
 
                     if (index < characters.itemCount) {
@@ -143,7 +205,7 @@ private fun CharactersListSection(
 
             when {
                 characters.itemCount == 0
-                        && isSearchActive
+                        && isEmptyStateActive
                         && characters.loadState.refresh is LoadState.NotLoading -> {
                     item {
                         Box(

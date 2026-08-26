@@ -6,7 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.atsz7.ram.hub.core.extensions.toNormalizedSearchTerm
-import com.atsz7.ram.hub.core.data.local.database.RamHubDatabase
+import com.atsz7.ram.hub.core.data.local.daos.CharactersDao
+import com.atsz7.ram.hub.core.data.local.daos.FavoritesDao
+import com.atsz7.ram.hub.core.data.local.entities.FavoriteEntity
 import com.atsz7.ram.hub.core.data.mappers.toDomain
 import com.atsz7.ram.hub.core.data.paging.CharacterRemoteMediator
 import com.atsz7.ram.hub.core.domain.model.Character
@@ -16,7 +18,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CharactersRepositoryImpl @Inject constructor(
-    private val database: RamHubDatabase,
+    private val charactersDao: CharactersDao,
+    private val favoritesDao: FavoritesDao,
     private val remoteMediator: CharacterRemoteMediator
 ) : CharactersRepository {
 
@@ -28,22 +31,36 @@ class CharactersRepositoryImpl @Inject constructor(
     )
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getCharacters(query: String): Flow<PagingData<Character>> {
+    override fun getCharacters(
+        query: String,
+        favoritesOnly: Boolean
+    ): Flow<PagingData<Character>> {
 
         val term = query.toNormalizedSearchTerm()
 
-        // An active search is served entirely from the local database, so the
-        // RemoteMediator is left out and remote pagination stays paused until cleared.
-        val pager = if (term.isBlank()) {
-            Pager(
+        // Favorites are a filter over what's already stored locally, so - just like an
+        // active search - the RemoteMediator is left out and remote pagination is skipped.
+        val pager = when {
+
+            favoritesOnly && term.isBlank() -> Pager(
+                config = pagingConfig,
+                pagingSourceFactory = { charactersDao.getFavorites() }
+            )
+
+            favoritesOnly -> Pager(
+                config = pagingConfig,
+                pagingSourceFactory = { charactersDao.searchFavorites(term) }
+            )
+
+            term.isBlank() -> Pager(
                 config = pagingConfig,
                 remoteMediator = remoteMediator,
-                pagingSourceFactory = { database.charactersDao().getAll() }
+                pagingSourceFactory = { charactersDao.getAll() }
             )
-        } else {
-            Pager(
+
+            else -> Pager(
                 config = pagingConfig,
-                pagingSourceFactory = { database.charactersDao().search(term) }
+                pagingSourceFactory = { charactersDao.search(term) }
             )
         }
 
@@ -54,6 +71,18 @@ class CharactersRepositoryImpl @Inject constructor(
 
     override fun requestForceRefresh() {
         remoteMediator.forceRefresh = true
+    }
+
+    override fun observeFavoriteIds(): Flow<Set<Int>> {
+        return favoritesDao.observeFavoriteIds().map { it.toSet() }
+    }
+
+    override suspend fun toggleFavorite(id: Int, isFavorite: Boolean) {
+        if (isFavorite) {
+            favoritesDao.add(FavoriteEntity(characterId = id))
+        } else {
+            favoritesDao.remove(id)
+        }
     }
 
     companion object {

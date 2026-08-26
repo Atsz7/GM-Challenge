@@ -9,7 +9,10 @@ import javax.inject.Inject
 class GetCharactersUseCase @Inject constructor(
     private val repository: CharactersRepository
 ) {
-    operator fun invoke(query: String = ""): Flow<PagingData<Character>> {
-        return repository.getCharacters(query)
+    operator fun invoke(
+        query: String = "",
+        favoritesOnly: Boolean = false
+    ): Flow<PagingData<Character>> {
+        return repository.getCharacters(query, favoritesOnly)
     }
 }
