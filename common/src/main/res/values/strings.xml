@@ -17,4 +17,8 @@
     <!-- Images -->
     <string name="broken_image_cd">Image failed to load</string>
 
+    <!-- Theme -->
+    <string name="dark_mode_cd">Switch to dark mode</string>
+    <string name="light_mode_cd">Switch to light mode</string>
+
 </resources>

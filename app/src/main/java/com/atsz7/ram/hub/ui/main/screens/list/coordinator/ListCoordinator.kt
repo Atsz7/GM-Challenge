@@ -22,6 +22,7 @@ class ListCoordinator(
     fun onFilterChange(filter: CharactersFilter) = viewModel.onFilterChange(filter)
     fun onPullToRefresh() = viewModel.onPullToRefresh()
     fun onToggleFavorite(id: Int) = viewModel.onToggleFavorite(id)
+    fun onToggleDarkMode() = viewModel.onToggleDarkMode()
     fun onCharacterClick(id: Int) = onNavigateToDetail(id)
 }
 

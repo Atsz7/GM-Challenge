@@ -75,6 +75,19 @@ class ListCoordinatorTest {
     }
 
     @Test
+    fun `onToggleDarkMode delegates to the ViewModel`() {
+
+        // Given
+        val coordinator = buildCoordinator()
+
+        // When
+        coordinator.onToggleDarkMode()
+
+        // Then
+        verify { viewModel.onToggleDarkMode() }
+    }
+
+    @Test
     fun `onCharacterClick triggers navigation instead of calling the ViewModel`() {
 
         // Given

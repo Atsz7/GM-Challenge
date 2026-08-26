@@ -5,8 +5,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.atsz7.ram.hub.core.domain.model.Character
 import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
+import com.atsz7.ram.hub.domain.usecases.ObserveDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
+import com.atsz7.ram.hub.domain.usecases.SetDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
 import com.atsz7.ram.hub.ui.main.base.MainViewModel
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -31,7 +34,9 @@ class ListViewModel @Inject constructor(
     getCharactersUseCase: GetCharactersUseCase,
     observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase,
     private val refreshCharactersUseCase: RefreshCharactersUseCase,
-    toggleFavoriteUseCase: ToggleFavoriteUseCase
+    toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    observeDarkModeUseCase: ObserveDarkModeUseCase,
+    private val setDarkModeUseCase: SetDarkModeUseCase
 ) : MainViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
 
     private val _searchQuery = MutableStateFlow("")
@@ -40,9 +45,10 @@ class ListViewModel @Inject constructor(
     val uiState: StateFlow<ListScreenState> = combine(
         _searchQuery,
         _filter,
-        favoriteIds
-    ) { query, filter, ids ->
-        ListScreenState(searchQuery = query, filter = filter, favoriteIds = ids)
+        favoriteIds,
+        observeDarkModeUseCase()
+    ) { query, filter, ids, isDarkMode ->
+        ListScreenState(searchQuery = query, filter = filter, favoriteIds = ids, isDarkMode = isDarkMode)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(
@@ -77,6 +83,12 @@ class ListViewModel @Inject constructor(
 
     fun onToggleFavorite(id: Int) {
         toggleFavorite(id)
+    }
+
+    fun onToggleDarkMode() {
+        viewModelScope.launch {
+            setDarkModeUseCase(!uiState.value.isDarkMode)
+        }
     }
 
     companion object {
