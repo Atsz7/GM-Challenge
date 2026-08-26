@@ -2,8 +2,10 @@ package com.atsz7.ram.hub.ui.main.screens.list
 
 import androidx.paging.PagingData
 import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
+import com.atsz7.ram.hub.domain.usecases.ObserveDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
+import com.atsz7.ram.hub.domain.usecases.SetDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import io.mockk.coVerify
@@ -30,6 +32,8 @@ class ListViewModelTest {
     private val observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase = mockk()
     private val refreshCharactersUseCase: RefreshCharactersUseCase = mockk(relaxed = true)
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase = mockk(relaxed = true)
+    private val observeDarkModeUseCase: ObserveDarkModeUseCase = mockk()
+    private val setDarkModeUseCase: SetDarkModeUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -37,13 +41,16 @@ class ListViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { getCharactersUseCase(any(), any()) } returns flowOf(PagingData.empty())
         every { observeFavoriteIdsUseCase() } returns flowOf(emptySet())
+        every { observeDarkModeUseCase() } returns flowOf(false)
     }
 
     private fun buildViewModel() = ListViewModel(
         getCharactersUseCase,
         observeFavoriteIdsUseCase,
         refreshCharactersUseCase,
-        toggleFavoriteUseCase
+        toggleFavoriteUseCase,
+        observeDarkModeUseCase,
+        setDarkModeUseCase
     )
 
     @After
@@ -136,5 +143,34 @@ class ListViewModelTest {
 
         // Then
         coVerify { toggleFavoriteUseCase(id = 1, isFavorite = false) }
+    }
+
+    @Test
+    fun `onToggleDarkMode switches from light to dark`() = runTest {
+
+        // Given
+        val viewModel = buildViewModel()
+        viewModel.uiState.first()
+
+        // When
+        viewModel.onToggleDarkMode()
+
+        // Then
+        coVerify { setDarkModeUseCase(true) }
+    }
+
+    @Test
+    fun `onToggleDarkMode switches from dark to light`() = runTest {
+
+        // Given
+        every { observeDarkModeUseCase() } returns flowOf(true)
+        val viewModel = buildViewModel()
+        viewModel.uiState.first { it.isDarkMode }
+
+        // When
+        viewModel.onToggleDarkMode()
+
+        // Then
+        coVerify { setDarkModeUseCase(false) }
     }
 }

@@ -10,6 +10,7 @@ data class ListActions(
     val onFilterChange: (CharactersFilter) -> Unit = {},
     val onPullToRefresh: () -> Unit = {},
     val onToggleFavorite: (Int) -> Unit = {},
+    val onToggleDarkMode: () -> Unit = {},
     val onCharacterClick: (Int) -> Unit = {}
 )
 
@@ -21,6 +22,7 @@ fun rememberListActions(coordinator: ListCoordinator): ListActions =
             onFilterChange = coordinator::onFilterChange,
             onPullToRefresh = coordinator::onPullToRefresh,
             onToggleFavorite = coordinator::onToggleFavorite,
+            onToggleDarkMode = coordinator::onToggleDarkMode,
             onCharacterClick = coordinator::onCharacterClick
         )
     }

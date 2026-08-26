@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -30,8 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -44,6 +41,7 @@ import coil3.compose.SubcomposeAsyncImage
 import com.atsz7.ram.hub.R
 import com.atsz7.ram.hub.common.extensions.statusToBadge
 import com.atsz7.ram.hub.common.extensions.toFormattedDate
+import com.atsz7.ram.hub.common.ui.components.buttons.RamCircleIconButton
 import com.atsz7.ram.hub.common.ui.components.rows.StatusBadge
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
@@ -100,10 +98,12 @@ private fun DetailTopBar(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(RamHubTheme.dimens.extraExtraLargeSize),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircleIconButton(
+        RamCircleIconButton(
             onClick = actions.onBackClick,
             icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = stringResource(R.string.back_cd),
@@ -121,7 +121,7 @@ private fun DetailTopBar(
             Box(modifier = Modifier.weight(1f))
         }
 
-        CircleIconButton(
+        RamCircleIconButton(
             onClick = actions.onToggleFavorite,
             icon = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
             contentDescription = stringResource(
@@ -133,22 +133,6 @@ private fun DetailTopBar(
                 MaterialTheme.colorScheme.onSurfaceVariant
             }
         )
-    }
-}
-
-@Composable
-private fun CircleIconButton(
-    onClick: () -> Unit,
-    icon: ImageVector,
-    contentDescription: String,
-    tint: Color,
-    modifier: Modifier = Modifier
-) {
-    IconButton(
-        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
-        onClick = onClick
-    ) {
-        Icon(imageVector = icon, contentDescription = contentDescription, tint = tint)
     }
 }
 

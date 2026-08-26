@@ -1,8 +1,10 @@
 package com.atsz7.ram.hub.ui.main.screens.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -36,6 +40,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.atsz7.ram.hub.R
 import com.atsz7.ram.hub.common.extensions.statusToBadge
+import com.atsz7.ram.hub.common.ui.components.buttons.RamCircleIconButton
 import com.atsz7.ram.hub.common.ui.components.inputs.RamSearchView
 import com.atsz7.ram.hub.common.ui.components.rows.RamBasicRow
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
@@ -47,6 +52,7 @@ import com.atsz7.ram.hub.ui.main.screens.list.actions.rememberListActions
 import com.atsz7.ram.hub.ui.main.screens.list.coordinator.ListCoordinator
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
+import com.atsz7.ram.hub.common.R as CommonR
 
 @Composable
 fun ListScreen(coordinator: ListCoordinator) {
@@ -70,6 +76,12 @@ private fun MainContent(
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
+
+            // Theme toggle
+            ListTopBar(
+                isDarkMode = state.isDarkMode,
+                actions = actions
+            )
 
             // SearchView
             RamSearchView(
@@ -98,6 +110,35 @@ private fun MainContent(
                 actions = actions
             )
         }
+    }
+}
+
+@Composable
+private fun ListTopBar(
+    isDarkMode: Boolean,
+    actions: ListActions,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                start = RamHubTheme.dimens.mediumSize,
+                top = RamHubTheme.dimens.mediumSize,
+                end = RamHubTheme.dimens.mediumSize
+            )
+            .height(RamHubTheme.dimens.extraExtraLargeSize),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RamCircleIconButton(
+            onClick = actions.onToggleDarkMode,
+            icon = if (isDarkMode) Icons.Filled.DarkMode else Icons.Filled.LightMode,
+            contentDescription = stringResource(
+                if (isDarkMode) CommonR.string.light_mode_cd else CommonR.string.dark_mode_cd
+            ),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
