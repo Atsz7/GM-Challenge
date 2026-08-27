@@ -83,7 +83,7 @@ private fun DetailContent(
             )
 
             if (state.character != null) {
-                DetailInfo(
+                CharacterDetailSection(
                     modifier = Modifier.padding(top = RamHubTheme.dimens.largeSize),
                     character = state.character
                 )
@@ -129,7 +129,7 @@ private fun DetailTopBar(
 }
 
 @Composable
-private fun DetailInfo(
+private fun CharacterDetailSection(
     character: Character,
     modifier: Modifier = Modifier
 ) {
@@ -139,12 +139,12 @@ private fun DetailInfo(
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 1.dp
     ) {
-        DetailInfoContent(character = character)
+        CharacterDetailContent(character = character)
     }
 }
 
 @Composable
-private fun DetailInfoContent(
+private fun CharacterDetailContent(
     character: Character,
     modifier: Modifier = Modifier
 ) {
@@ -153,7 +153,7 @@ private fun DetailInfoContent(
             .fillMaxWidth()
             .padding(RamHubTheme.dimens.mediumSize)
     ) {
-        DetailPhoto(character = character)
+        CharacterDetailPhoto(character = character)
 
         Column(modifier = Modifier.padding(start = RamHubTheme.dimens.mediumSize)) {
             Text(
@@ -167,17 +167,17 @@ private fun DetailInfoContent(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            DetailLabeledText(
+            CharacterDetailLabeledText(
                 modifier = Modifier.padding(top = RamHubTheme.dimens.smallSize),
                 label = stringResource(R.string.gender_label),
                 value = character.gender
             )
-            DetailLabeledText(
+            CharacterDetailLabeledText(
                 modifier = Modifier.padding(top = RamHubTheme.dimens.extraTinySize),
                 label = stringResource(R.string.origin_label),
                 value = character.originName
             )
-            DetailLabeledText(
+            CharacterDetailLabeledText(
                 modifier = Modifier.padding(top = RamHubTheme.dimens.extraTinySize),
                 label = stringResource(R.string.location_label),
                 value = character.locationName
@@ -191,28 +191,7 @@ private fun DetailInfoContent(
 }
 
 @Composable
-private fun DetailLabeledText(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = modifier,
-        text = buildAnnotatedString {
-            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                append("$label: ")
-            }
-            append(value)
-        },
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
-}
-
-@Composable
-private fun DetailPhoto(
+private fun CharacterDetailPhoto(
     character: Character,
     modifier: Modifier = Modifier
 ) {
@@ -234,7 +213,7 @@ private fun DetailPhoto(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(RamHubTheme.dimens.extraExtraLargeSize),
-                        strokeWidth = 2.dp,
+                        strokeWidth = RamHubTheme.dimens.extraTinySize,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
@@ -251,4 +230,25 @@ private fun DetailPhoto(
             }
         )
     }
+}
+
+@Composable
+private fun CharacterDetailLabeledText(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        modifier = modifier,
+        text = buildAnnotatedString {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append("$label: ")
+            }
+            append(value)
+        },
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
 }

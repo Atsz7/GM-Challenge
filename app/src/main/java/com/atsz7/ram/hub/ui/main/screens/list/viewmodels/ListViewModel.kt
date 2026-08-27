@@ -10,7 +10,7 @@ import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.SetDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
-import com.atsz7.ram.hub.ui.main.viewmodels.base.MainViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.BaseFavoritesViewModel
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +37,7 @@ class ListViewModel @Inject constructor(
     toggleFavoriteUseCase: ToggleFavoriteUseCase,
     observeDarkModeUseCase: ObserveDarkModeUseCase,
     private val setDarkModeUseCase: SetDarkModeUseCase
-) : MainViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
+) : BaseFavoritesViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
 
     private val _searchQuery = MutableStateFlow("")
     private val _filter = MutableStateFlow(CharactersFilter.ALL)

@@ -98,7 +98,7 @@ private fun ListContent(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        floatingActionButton = { ListScrollToTopSection(listState) }
+        floatingActionButton = { ListFabSection(listState) }
     ) { innerPadding ->
 
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -323,7 +323,7 @@ private fun CharactersErrorRow(
 }
 
 @Composable
-private fun ListScrollToTopSection(listState: LazyListState) {
+private fun ListFabSection(listState: LazyListState) {
 
     val showFab by remember(listState) {
         derivedStateOf { listState.firstVisibleItemIndex > 0 }
