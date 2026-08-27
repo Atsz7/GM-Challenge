@@ -51,4 +51,5 @@ dependencies {
 
     // Instrumentation tests
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.runner)
 }
