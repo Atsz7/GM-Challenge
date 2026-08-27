@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -24,8 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,26 +35,30 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.atsz7.ram.hub.R
 import com.atsz7.ram.hub.common.extensions.statusToBadge
 import com.atsz7.ram.hub.common.extensions.toFormattedDate
+import com.atsz7.ram.hub.common.ui.components.bars.RamTopBar
 import com.atsz7.ram.hub.common.ui.components.buttons.RamCircleIconButton
 import com.atsz7.ram.hub.common.ui.components.rows.StatusBadge
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.ui.main.screens.detail.actions.DetailActions
 import com.atsz7.ram.hub.ui.main.screens.detail.actions.rememberDetailActions
 import com.atsz7.ram.hub.ui.main.screens.detail.coordinator.DetailCoordinator
 import com.atsz7.ram.hub.ui.main.screens.detail.state.DetailScreenState
 import com.atsz7.ram.hub.common.R as CommonR
 
+private val DetailInfoShape = getShapeByIndex(index = 0, size = 1)
+
 @Composable
 fun DetailScreen(coordinator: DetailCoordinator) {
 
-    val state by coordinator.uiState.collectAsState()
+    val state by coordinator.uiState.collectAsStateWithLifecycle()
     val actions = rememberDetailActions(coordinator)
 
     DetailContent(state = state, actions = actions)
@@ -81,7 +84,7 @@ private fun DetailContent(
             )
 
             if (state.character != null) {
-                DetailInfo(
+                CharacterDetailSection(
                     modifier = Modifier.padding(top = RamHubTheme.dimens.largeSize),
                     character = state.character
                 )
@@ -97,85 +100,52 @@ private fun DetailTopBar(
     actions: DetailActions,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(RamHubTheme.dimens.extraExtraLargeSize),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RamCircleIconButton(
-            onClick = actions.onBackClick,
-            icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-            contentDescription = stringResource(R.string.back_cd),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        if (createdAt != null) {
-            DetailCreatedHeader(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = RamHubTheme.dimens.smallSize),
-                createdAt = createdAt
-            )
-        } else {
-            Box(modifier = Modifier.weight(1f))
-        }
-
-        RamCircleIconButton(
-            onClick = actions.onToggleFavorite,
-            icon = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-            contentDescription = stringResource(
-                if (isFavorite) CommonR.string.remove_favorite_cd else CommonR.string.add_favorite_cd
-            ),
-            tint = if (isFavorite) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            }
-        )
-    }
-}
-
-@Composable
-private fun DetailCreatedHeader(
-    createdAt: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
+    RamTopBar(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = stringResource(R.string.created_label),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            modifier = Modifier.padding(top = RamHubTheme.dimens.extraTinySize),
-            text = createdAt.toFormattedDate(),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+        title = stringResource(R.string.created_label),
+        subtitle = createdAt?.toFormattedDate(),
+        navigationIcon = {
+            RamCircleIconButton(
+                onClick = actions.onBackClick,
+                icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                contentDescription = stringResource(R.string.back_cd),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        actionIcon = {
+            RamCircleIconButton(
+                onClick = actions.onToggleFavorite,
+                icon = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = stringResource(
+                    if (isFavorite) CommonR.string.remove_favorite_cd else CommonR.string.add_favorite_cd
+                ),
+                tint = if (isFavorite) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+        }
+    )
 }
 
 @Composable
-private fun DetailInfo(
+private fun CharacterDetailSection(
     character: Character,
     modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = getShapeByIndex(index = 0, size = 1),
+        shape = DetailInfoShape,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 1.dp
     ) {
-        DetailInfoContent(character = character)
+        CharacterDetailContent(character = character)
     }
 }
 
 @Composable
-private fun DetailInfoContent(
+private fun CharacterDetailContent(
     character: Character,
     modifier: Modifier = Modifier
 ) {
@@ -184,7 +154,7 @@ private fun DetailInfoContent(
             .fillMaxWidth()
             .padding(RamHubTheme.dimens.mediumSize)
     ) {
-        DetailPhoto(character = character)
+        CharacterDetailPhoto(character = character)
 
         Column(modifier = Modifier.padding(start = RamHubTheme.dimens.mediumSize)) {
             Text(
@@ -198,17 +168,17 @@ private fun DetailInfoContent(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            DetailLabeledText(
+            CharacterDetailLabeledText(
                 modifier = Modifier.padding(top = RamHubTheme.dimens.smallSize),
                 label = stringResource(R.string.gender_label),
                 value = character.gender
             )
-            DetailLabeledText(
+            CharacterDetailLabeledText(
                 modifier = Modifier.padding(top = RamHubTheme.dimens.extraTinySize),
                 label = stringResource(R.string.origin_label),
                 value = character.originName
             )
-            DetailLabeledText(
+            CharacterDetailLabeledText(
                 modifier = Modifier.padding(top = RamHubTheme.dimens.extraTinySize),
                 label = stringResource(R.string.location_label),
                 value = character.locationName
@@ -222,28 +192,7 @@ private fun DetailInfoContent(
 }
 
 @Composable
-private fun DetailLabeledText(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = modifier,
-        text = buildAnnotatedString {
-            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                append("$label: ")
-            }
-            append(value)
-        },
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
-}
-
-@Composable
-private fun DetailPhoto(
+private fun CharacterDetailPhoto(
     character: Character,
     modifier: Modifier = Modifier
 ) {
@@ -265,7 +214,7 @@ private fun DetailPhoto(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(RamHubTheme.dimens.extraExtraLargeSize),
-                        strokeWidth = 2.dp,
+                        strokeWidth = RamHubTheme.dimens.extraTinySize,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
@@ -280,6 +229,51 @@ private fun DetailPhoto(
                     )
                 }
             }
+        )
+    }
+}
+
+@Composable
+private fun CharacterDetailLabeledText(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        modifier = modifier,
+        text = buildAnnotatedString {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append("$label: ")
+            }
+            append(value)
+        },
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailContentPreview() {
+    RamHubTheme {
+        DetailContent(
+            state = DetailScreenState(
+                character = Character(
+                    id = 1,
+                    name = "Rick Sanchez",
+                    status = "Alive",
+                    specie = "Human",
+                    gender = "Male",
+                    originName = "Earth (C-137)",
+                    locationName = "Citadel of Ricks",
+                    imageUrl = "",
+                    createdAt = "2017-11-04T18:48:46.250Z"
+                ),
+                isFavorite = true
+            ),
+            actions = DetailActions()
         )
     }
 }

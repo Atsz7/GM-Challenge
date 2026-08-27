@@ -1,6 +1,6 @@
 package com.atsz7.ram.hub.domain.usecases
 
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.domain.repositories.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

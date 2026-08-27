@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RamHub</string>
+    <string name="characters_subtitle">Rick &amp; Morty</string>
     <string name="retry">Retry</string>
     <string name="no_search_results">No characters found</string>
+    <string name="characters_load_error">An error occurred while loading characters</string>
     <string name="filter_all_label">All</string>
     <string name="filter_favorites_label">Favorites</string>
     <string name="back_cd">Back</string>
@@ -10,4 +12,5 @@
     <string name="gender_label">Gender</string>
     <string name="origin_label">Origin</string>
     <string name="location_label">Location</string>
+    <string name="scroll_to_top_cd">Scroll to top</string>
 </resources>

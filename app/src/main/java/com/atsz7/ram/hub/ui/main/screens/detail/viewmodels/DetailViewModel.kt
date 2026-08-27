@@ -1,10 +1,11 @@
-package com.atsz7.ram.hub.ui.main.screens.detail
+package com.atsz7.ram.hub.ui.main.screens.detail.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import com.atsz7.ram.hub.domain.usecases.GetCharacterByIdUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
-import com.atsz7.ram.hub.ui.main.base.MainViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.BaseFavoritesViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.STOP_TIMEOUT_MILLIS
 import com.atsz7.ram.hub.ui.main.navigation.MainRoute
 import com.atsz7.ram.hub.ui.main.screens.detail.state.DetailScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ class DetailViewModel @Inject constructor(
     getCharacterByIdUseCase: GetCharacterByIdUseCase,
     observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase,
     toggleFavoriteUseCase: ToggleFavoriteUseCase
-) : MainViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
+) : BaseFavoritesViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
 
     private val characterId: Int = route.characterId
 

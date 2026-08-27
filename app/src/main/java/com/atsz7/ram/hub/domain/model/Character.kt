@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.core.domain.model
+package com.atsz7.ram.hub.domain.model
 
 data class Character(
     val id: Int,

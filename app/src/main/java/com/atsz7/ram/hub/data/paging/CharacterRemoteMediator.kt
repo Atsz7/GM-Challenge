@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.core.data.paging
+package com.atsz7.ram.hub.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -13,8 +13,10 @@ import com.atsz7.ram.hub.core.data.remote.api.RamHubApi
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @OptIn(ExperimentalPagingApi::class)
+@Singleton
 class CharacterRemoteMediator @Inject constructor(
     private val ramHubApi: RamHubApi,
     private val database: RamHubDatabase
@@ -67,6 +69,8 @@ class CharacterRemoteMediator @Inject constructor(
         } catch (ex: IOException) {
             MediatorResult.Error(ex)
         } catch (ex: HttpException) {
+            MediatorResult.Error(ex)
+        } catch (ex: Exception) {
             MediatorResult.Error(ex)
         }
     }

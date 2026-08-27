@@ -1,7 +1,7 @@
 package com.atsz7.ram.hub.ui.main.screens.list.coordinator
 
 import androidx.paging.PagingData
-import com.atsz7.ram.hub.ui.main.screens.list.ListViewModel
+import com.atsz7.ram.hub.ui.main.screens.list.viewmodels.ListViewModel
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 import io.mockk.every

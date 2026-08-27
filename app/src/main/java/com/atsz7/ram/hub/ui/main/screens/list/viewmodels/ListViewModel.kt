@@ -1,16 +1,17 @@
-package com.atsz7.ram.hub.ui.main.screens.list
+package com.atsz7.ram.hub.ui.main.screens.list.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.atsz7.ram.hub.core.domain.model.Character
-import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
+import com.atsz7.ram.hub.data.paging.CharactersPagingProvider
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.domain.usecases.ObserveDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.SetDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
-import com.atsz7.ram.hub.ui.main.base.MainViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.BaseFavoritesViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.STOP_TIMEOUT_MILLIS
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,13 +32,13 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    getCharactersUseCase: GetCharactersUseCase,
+    charactersPagingProvider: CharactersPagingProvider,
     observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase,
     private val refreshCharactersUseCase: RefreshCharactersUseCase,
     toggleFavoriteUseCase: ToggleFavoriteUseCase,
     observeDarkModeUseCase: ObserveDarkModeUseCase,
     private val setDarkModeUseCase: SetDarkModeUseCase
-) : MainViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
+) : BaseFavoritesViewModel(observeFavoriteIdsUseCase, toggleFavoriteUseCase) {
 
     private val _searchQuery = MutableStateFlow("")
     private val _filter = MutableStateFlow(CharactersFilter.ALL)
@@ -62,7 +63,7 @@ class ListViewModel @Inject constructor(
         _filter
     ) { query, filter -> query to filter }
         .flatMapLatest { (query, filter) ->
-            getCharactersUseCase(
+            charactersPagingProvider.getCharacters(
                 query = query,
                 favoritesOnly = filter.isFavorites()
             )

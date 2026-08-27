@@ -1,6 +1,6 @@
-package com.atsz7.ram.hub.ui.main.screens.detail
+package com.atsz7.ram.hub.ui.main.screens.detail.viewmodels
 
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.domain.usecases.GetCharacterByIdUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
@@ -8,6 +8,7 @@ import com.atsz7.ram.hub.ui.main.navigation.MainRoute
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -45,7 +46,7 @@ class DetailViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         every { getCharacterByIdUseCase(1) } returns flowOf(character)
-        every { observeFavoriteIdsUseCase() } returns flowOf(emptySet())
+        every { observeFavoriteIdsUseCase() } returns flowOf(persistentSetOf())
     }
 
     @After
@@ -77,7 +78,7 @@ class DetailViewModelTest {
     fun `uiState reflects isFavorite from the favorite ids`() = runTest {
 
         // Given
-        every { observeFavoriteIdsUseCase() } returns flowOf(setOf(1))
+        every { observeFavoriteIdsUseCase() } returns flowOf(persistentSetOf(1))
         val viewModel = buildViewModel()
 
         // When
@@ -104,7 +105,7 @@ class DetailViewModelTest {
     fun `onToggleFavorite unmarks an already favorite character`() = runTest {
 
         // Given
-        every { observeFavoriteIdsUseCase() } returns flowOf(setOf(1))
+        every { observeFavoriteIdsUseCase() } returns flowOf(persistentSetOf(1))
         val viewModel = buildViewModel()
         viewModel.uiState.first { it.isFavorite }
 
