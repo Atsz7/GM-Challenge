@@ -11,6 +11,7 @@ import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.SetDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
 import com.atsz7.ram.hub.ui.main.viewmodels.base.BaseFavoritesViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.STOP_TIMEOUT_MILLIS
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

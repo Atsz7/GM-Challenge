@@ -29,8 +29,4 @@ abstract class BaseFavoritesViewModel(
             toggleFavoriteUseCase(id = id, isFavorite = !isCurrentlyFavorite)
         }
     }
-
-    companion object {
-        protected const val STOP_TIMEOUT_MILLIS = 5_000L
-    }
 }

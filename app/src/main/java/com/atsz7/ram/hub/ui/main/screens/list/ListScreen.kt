@@ -41,8 +41,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -62,6 +64,8 @@ import com.atsz7.ram.hub.ui.main.screens.list.coordinator.ListCoordinator
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import com.atsz7.ram.hub.common.R as CommonR
 
@@ -354,5 +358,31 @@ private fun ListFabSection(listState: LazyListState) {
                 contentDescription = stringResource(R.string.scroll_to_top_cd)
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ListContentPreview() {
+    val previewCharacters = List(5) { index ->
+        Character(
+            id = index,
+            name = "Rick Sanchez",
+            status = "Alive",
+            specie = "Human",
+            gender = "Male",
+            originName = "Earth (C-137)",
+            locationName = "Citadel of Ricks",
+            imageUrl = "",
+            createdAt = "2017-11-04T18:48:46.250Z"
+        )
+    }
+
+    RamHubTheme {
+        ListContent(
+            state = ListScreenState(favoriteIds = persistentSetOf(0)),
+            characters = flowOf(PagingData.from(previewCharacters)).collectAsLazyPagingItems(),
+            actions = ListActions()
+        )
     }
 }

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.atsz7.ram.hub.R
@@ -251,4 +252,28 @@ private fun CharacterDetailLabeledText(
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailContentPreview() {
+    RamHubTheme {
+        DetailContent(
+            state = DetailScreenState(
+                character = Character(
+                    id = 1,
+                    name = "Rick Sanchez",
+                    status = "Alive",
+                    specie = "Human",
+                    gender = "Male",
+                    originName = "Earth (C-137)",
+                    locationName = "Citadel of Ricks",
+                    imageUrl = "",
+                    createdAt = "2017-11-04T18:48:46.250Z"
+                ),
+                isFavorite = true
+            ),
+            actions = DetailActions()
+        )
+    }
 }

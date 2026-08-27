@@ -5,6 +5,7 @@ import com.atsz7.ram.hub.domain.usecases.GetCharacterByIdUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase
 import com.atsz7.ram.hub.ui.main.viewmodels.base.BaseFavoritesViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.base.STOP_TIMEOUT_MILLIS
 import com.atsz7.ram.hub.ui.main.navigation.MainRoute
 import com.atsz7.ram.hub.ui.main.screens.detail.state.DetailScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

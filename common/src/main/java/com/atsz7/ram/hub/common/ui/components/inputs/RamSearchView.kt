@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.atsz7.ram.hub.common.R
+import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 
 private val SearchFieldShape = RoundedCornerShape(percent = 50)
 
@@ -45,4 +47,15 @@ fun RamSearchView(
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RamSearchViewPreview() {
+    RamHubTheme {
+        RamSearchView(
+            query = "",
+            onQueryChange = {}
+        )
+    }
 }
