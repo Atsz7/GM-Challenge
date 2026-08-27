@@ -111,7 +111,7 @@ common
 
 ## 📱 Capturas
 
-|            | Lista                                                         | Detalle                                                           |
-|------------|---------------------------------------------------------------|-------------------------------------------------------------------|
-| **Claro**  | ![Lista de personajes](docs/images/screenshot_list.png)       | ![Detalle de personaje](docs/images/screenshot_detail.png)        |
-| **Oscuro** | ![Lista en modo oscuro](docs/images/screenshot_list_dark.png) | ![Detalle en modo oscuro](docs/images/screenshot_detail_dark.png) |
+|            | Lista                                                                                     | Detalle                                                                                       |
+|------------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| **Claro**  | <img src="docs/images/screenshot_list.png" width="220" alt="Lista de personajes" />       | <img src="docs/images/screenshot_detail.png" width="220" alt="Detalle de personaje" />        |
+| **Oscuro** | <img src="docs/images/screenshot_list_dark.png" width="220" alt="Lista en modo oscuro" /> | <img src="docs/images/screenshot_detail_dark.png" width="220" alt="Detalle en modo oscuro" /> |
