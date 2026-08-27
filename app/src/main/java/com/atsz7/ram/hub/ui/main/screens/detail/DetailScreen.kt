@@ -52,6 +52,8 @@ import com.atsz7.ram.hub.ui.main.screens.detail.coordinator.DetailCoordinator
 import com.atsz7.ram.hub.ui.main.screens.detail.state.DetailScreenState
 import com.atsz7.ram.hub.common.R as CommonR
 
+private val DetailInfoShape = getShapeByIndex(index = 0, size = 1)
+
 @Composable
 fun DetailScreen(coordinator: DetailCoordinator) {
 
@@ -133,7 +135,7 @@ private fun DetailInfo(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = getShapeByIndex(index = 0, size = 1),
+        shape = DetailInfoShape,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 1.dp
     ) {
