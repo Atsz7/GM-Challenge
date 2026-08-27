@@ -70,6 +70,8 @@ class CharacterRemoteMediator @Inject constructor(
             MediatorResult.Error(ex)
         } catch (ex: HttpException) {
             MediatorResult.Error(ex)
+        } catch (ex: Exception) {
+            MediatorResult.Error(ex)
         }
     }
 }

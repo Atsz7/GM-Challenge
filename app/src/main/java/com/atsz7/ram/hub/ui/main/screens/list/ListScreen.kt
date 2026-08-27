@@ -306,10 +306,15 @@ private fun CharactersErrorRow(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier.padding(top = RamHubTheme.dimens.extraLargeSize),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.characters_load_error),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             TextButton(onClick = onRetry) {
                 Text(stringResource(R.string.retry))
                 Spacer(modifier = Modifier.width(RamHubTheme.dimens.tinySize))

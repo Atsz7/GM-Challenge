@@ -22,6 +22,7 @@ android {
 
 dependencies {
 
+    // General
     implementation(libs.androidx.core.ktx)
 
     // Retrofit
