@@ -244,7 +244,7 @@ private fun LazyListScope.charactersListSection(
                 onClick = { actions.onCharacterClick(character.id) }
             )
 
-            if (index < characters.itemCount) {
+            if (index < characters.itemCount - 1) {
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
