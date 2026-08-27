@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.ui.main.screens.list
+package com.atsz7.ram.hub.ui.main.screens.list.viewmodels
 
 import androidx.paging.PagingData
 import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase

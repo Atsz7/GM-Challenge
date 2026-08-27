@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.ui.main.screens.detail
+package com.atsz7.ram.hub.ui.main.screens.detail.viewmodels
 
 import com.atsz7.ram.hub.core.domain.model.Character
 import com.atsz7.ram.hub.domain.usecases.GetCharacterByIdUseCase

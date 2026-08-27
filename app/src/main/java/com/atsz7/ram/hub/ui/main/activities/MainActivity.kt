@@ -9,7 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.ui.main.navigation.MainNavGraph
-import com.atsz7.ram.hub.ui.main.theme.ThemeViewModel
+import com.atsz7.ram.hub.ui.main.viewmodels.theme.ThemeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

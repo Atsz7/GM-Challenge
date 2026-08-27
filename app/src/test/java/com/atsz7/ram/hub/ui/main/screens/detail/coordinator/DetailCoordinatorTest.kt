@@ -1,6 +1,6 @@
 package com.atsz7.ram.hub.ui.main.screens.detail.coordinator
 
-import com.atsz7.ram.hub.ui.main.screens.detail.DetailViewModel
+import com.atsz7.ram.hub.ui.main.screens.detail.viewmodels.DetailViewModel
 import com.atsz7.ram.hub.ui.main.screens.detail.state.DetailScreenState
 import io.mockk.every
 import io.mockk.mockk

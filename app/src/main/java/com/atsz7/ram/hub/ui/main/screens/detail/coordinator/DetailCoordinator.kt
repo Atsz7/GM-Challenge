@@ -3,7 +3,7 @@ package com.atsz7.ram.hub.ui.main.screens.detail.coordinator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.atsz7.ram.hub.ui.main.screens.detail.DetailViewModel
+import com.atsz7.ram.hub.ui.main.screens.detail.viewmodels.DetailViewModel
 import com.atsz7.ram.hub.ui.main.screens.detail.state.DetailScreenState
 import kotlinx.coroutines.flow.StateFlow
 

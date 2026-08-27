@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.PagingData
 import com.atsz7.ram.hub.core.domain.model.Character
-import com.atsz7.ram.hub.ui.main.screens.list.ListViewModel
+import com.atsz7.ram.hub.ui.main.screens.list.viewmodels.ListViewModel
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
 import kotlinx.coroutines.flow.Flow

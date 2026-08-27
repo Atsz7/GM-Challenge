@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.ui.main.theme
+package com.atsz7.ram.hub.ui.main.viewmodels.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
