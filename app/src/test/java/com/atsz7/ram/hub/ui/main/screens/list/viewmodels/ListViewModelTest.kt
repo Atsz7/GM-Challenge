@@ -1,7 +1,7 @@
 package com.atsz7.ram.hub.ui.main.screens.list.viewmodels
 
 import androidx.paging.PagingData
-import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
+import com.atsz7.ram.hub.data.paging.CharactersPagingProvider
 import com.atsz7.ram.hub.domain.usecases.ObserveDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
@@ -29,7 +29,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ListViewModelTest {
 
-    private val getCharactersUseCase: GetCharactersUseCase = mockk()
+    private val charactersPagingProvider: CharactersPagingProvider = mockk()
     private val observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase = mockk()
     private val refreshCharactersUseCase: RefreshCharactersUseCase = mockk(relaxed = true)
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase = mockk(relaxed = true)
@@ -40,13 +40,13 @@ class ListViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        every { getCharactersUseCase(any(), any()) } returns flowOf(PagingData.empty())
+        every { charactersPagingProvider.getCharacters(any(), any()) } returns flowOf(PagingData.empty())
         every { observeFavoriteIdsUseCase() } returns flowOf(persistentSetOf())
         every { observeDarkModeUseCase() } returns flowOf(false)
     }
 
     private fun buildViewModel() = ListViewModel(
-        getCharactersUseCase,
+        charactersPagingProvider,
         observeFavoriteIdsUseCase,
         refreshCharactersUseCase,
         toggleFavoriteUseCase,
@@ -70,7 +70,7 @@ class ListViewModelTest {
         viewModel.characters.first()
 
         // Then
-        verify { getCharactersUseCase("", false) }
+        verify { charactersPagingProvider.getCharacters("", false) }
     }
 
     @Suppress("UnusedFlow")
@@ -86,7 +86,7 @@ class ListViewModelTest {
 
         // Then
         assertEquals("Rick", viewModel.uiState.first { it.searchQuery == "Rick" }.searchQuery)
-        verify { getCharactersUseCase("Rick", false) }
+        verify { charactersPagingProvider.getCharacters("Rick", false) }
     }
 
     @Suppress("UnusedFlow")
@@ -102,7 +102,7 @@ class ListViewModelTest {
 
         // Then
         assertEquals(CharactersFilter.FAVORITES, viewModel.uiState.first { it.filter == CharactersFilter.FAVORITES }.filter)
-        verify { getCharactersUseCase("", true) }
+        verify { charactersPagingProvider.getCharacters("", true) }
     }
 
     @Test

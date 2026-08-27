@@ -51,9 +51,6 @@ interface CharactersDao {
     @Query("SELECT COUNT(*) FROM characters")
     suspend fun count(): Int
 
-    @Query("SELECT * FROM characters ORDER BY id DESC LIMIT 1")
-    suspend fun getLastCharacter(): CharacterEntity?
-
     @Upsert
     suspend fun upsertAll(characters: List<CharacterEntity>)
 

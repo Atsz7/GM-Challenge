@@ -3,8 +3,8 @@ package com.atsz7.ram.hub.ui.main.screens.list.viewmodels
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.atsz7.ram.hub.data.paging.CharactersPagingProvider
 import com.atsz7.ram.hub.domain.model.Character
-import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.RefreshCharactersUseCase
@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    getCharactersUseCase: GetCharactersUseCase,
+    charactersPagingProvider: CharactersPagingProvider,
     observeFavoriteIdsUseCase: ObserveFavoriteIdsUseCase,
     private val refreshCharactersUseCase: RefreshCharactersUseCase,
     toggleFavoriteUseCase: ToggleFavoriteUseCase,
@@ -62,7 +62,7 @@ class ListViewModel @Inject constructor(
         _filter
     ) { query, filter -> query to filter }
         .flatMapLatest { (query, filter) ->
-            getCharactersUseCase(
+            charactersPagingProvider.getCharacters(
                 query = query,
                 favoritesOnly = filter.isFavorites()
             )
