@@ -19,7 +19,10 @@ fun RamCircleIconButton(
     modifier: Modifier = Modifier
 ) {
     IconButton(
-        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+        modifier = modifier.background(
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = CircleShape
+        ),
         onClick = onClick
     ) {
         Icon(imageVector = icon, contentDescription = contentDescription, tint = tint)

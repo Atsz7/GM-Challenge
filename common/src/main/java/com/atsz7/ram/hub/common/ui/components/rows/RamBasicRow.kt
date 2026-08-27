@@ -81,16 +81,22 @@ fun RamBasicRow(
                     contentDescription = title,
                     contentScale = ContentScale.Crop,
                     loading = {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(RamHubTheme.dimens.largeSize),
-                                strokeWidth = 2.dp,
+                                strokeWidth = RamHubTheme.dimens.extraTinySize,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     },
                     error = {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.BrokenImage,
                                 contentDescription = stringResource(R.string.broken_image_cd),
@@ -122,9 +128,17 @@ fun RamBasicRow(
 
             IconButton(onClick = onFavoriteToggle) {
                 Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    imageVector = if (isFavorite) {
+                        Icons.Filled.Favorite
+                    } else {
+                        Icons.Filled.FavoriteBorder
+                    },
                     contentDescription = stringResource(
-                        if (isFavorite) R.string.remove_favorite_cd else R.string.add_favorite_cd
+                        if (isFavorite) {
+                            R.string.remove_favorite_cd
+                        } else {
+                            R.string.add_favorite_cd
+                        }
                     ),
                     tint = if (isFavorite) {
                         MaterialTheme.colorScheme.error
