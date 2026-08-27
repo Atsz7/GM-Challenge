@@ -15,14 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.atsz7.ram.hub.common.R
 
+private val SearchFieldShape = RoundedCornerShape(percent = 50)
+
 @Composable
 fun RamSearchView(
     modifier: Modifier = Modifier,
     query: String,
     onQueryChange: (String) -> Unit
 ) {
-    val shape = RoundedCornerShape(percent = 50)
-
     TextField(
         value = query,
         onValueChange = onQueryChange,
@@ -36,7 +36,7 @@ fun RamSearchView(
             )
         },
         singleLine = true,
-        shape = shape,
+        shape = SearchFieldShape,
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,

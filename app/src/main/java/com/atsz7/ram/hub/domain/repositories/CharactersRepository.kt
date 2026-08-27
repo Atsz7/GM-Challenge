@@ -2,6 +2,7 @@ package com.atsz7.ram.hub.domain.repositories
 
 import androidx.paging.PagingData
 import com.atsz7.ram.hub.core.domain.model.Character
+import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.flow.Flow
 
 interface CharactersRepository {
@@ -13,6 +14,6 @@ interface CharactersRepository {
 
     fun requestForceRefresh()
     fun getCharacterById(id: Int): Flow<Character?>
-    fun observeFavoriteIds(): Flow<Set<Int>>
+    fun observeFavoriteIds(): Flow<ImmutableSet<Int>>
     suspend fun toggleFavorite(id: Int, isFavorite: Boolean)
 }

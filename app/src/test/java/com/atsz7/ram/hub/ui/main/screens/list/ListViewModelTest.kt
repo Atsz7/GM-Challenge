@@ -12,6 +12,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -40,7 +41,7 @@ class ListViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         every { getCharactersUseCase(any(), any()) } returns flowOf(PagingData.empty())
-        every { observeFavoriteIdsUseCase() } returns flowOf(emptySet())
+        every { observeFavoriteIdsUseCase() } returns flowOf(persistentSetOf())
         every { observeDarkModeUseCase() } returns flowOf(false)
     }
 
@@ -134,7 +135,7 @@ class ListViewModelTest {
     fun `onToggleFavorite unmarks an already favorite character`() = runTest {
 
         // Given
-        every { observeFavoriteIdsUseCase() } returns flowOf(setOf(1))
+        every { observeFavoriteIdsUseCase() } returns flowOf(persistentSetOf(1))
         val viewModel = buildViewModel()
         viewModel.uiState.first { it.favoriteIds.contains(1) }
 

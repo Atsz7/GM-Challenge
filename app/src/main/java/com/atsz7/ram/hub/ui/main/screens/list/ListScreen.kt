@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -60,6 +61,7 @@ import com.atsz7.ram.hub.ui.main.screens.list.actions.rememberListActions
 import com.atsz7.ram.hub.ui.main.screens.list.coordinator.ListCoordinator
 import com.atsz7.ram.hub.ui.main.screens.list.models.CharactersFilter
 import com.atsz7.ram.hub.ui.main.screens.list.state.ListScreenState
+import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.launch
 import com.atsz7.ram.hub.common.R as CommonR
 
@@ -84,12 +86,14 @@ private fun ListContent(
     actions: ListActions
 ) {
 
-    val listState = rememberSaveable(
-        state.searchQuery,
-        state.filter,
-        saver = LazyListState.Saver
-    ) {
+    val listState = rememberSaveable(saver = LazyListState.Saver) {
         LazyListState()
+    }
+
+    LaunchedEffect(characters.loadState.refresh) {
+        if (characters.loadState.refresh is LoadState.NotLoading) {
+            listState.scrollToItem(0)
+        }
     }
 
     Scaffold(
@@ -144,7 +148,9 @@ private fun ListContent(
                     // Characters list
                     charactersListSection(
                         characters = characters,
-                        state = state,
+                        isEmptyStateActive = state.searchQuery.isNotBlank()
+                                || state.filter.isFavorites(),
+                        favoriteIds = state.favoriteIds,
                         actions = actions
                     )
                 }
@@ -206,11 +212,10 @@ private fun CharactersFilterRow(
 
 private fun LazyListScope.charactersListSection(
     characters: LazyPagingItems<Character>,
-    state: ListScreenState,
+    isEmptyStateActive: Boolean,
+    favoriteIds: ImmutableSet<Int>,
     actions: ListActions
 ) {
-
-    val isEmptyStateActive = state.searchQuery.isNotBlank() || state.filter.isFavorites()
 
     items(
         count = characters.itemCount,
@@ -220,10 +225,12 @@ private fun LazyListScope.charactersListSection(
         val character = characters[index]
         if (character != null) {
 
-            val shape = getShapeByIndex(
-                index = index,
-                size = characters.itemCount
-            )
+            val shape = remember(index, characters.itemCount) {
+                getShapeByIndex(
+                    index = index,
+                    size = characters.itemCount
+                )
+            }
 
             RamBasicRow(
                 modifier = Modifier.padding(horizontal = RamHubTheme.dimens.mediumSize),
@@ -232,7 +239,7 @@ private fun LazyListScope.charactersListSection(
                 imageUrl = character.imageUrl,
                 badge = character.status.statusToBadge(),
                 shape = shape,
-                isFavorite = character.id in state.favoriteIds,
+                isFavorite = character.id in favoriteIds,
                 onFavoriteToggle = { actions.onToggleFavorite(character.id) },
                 onClick = { actions.onCharacterClick(character.id) }
             )

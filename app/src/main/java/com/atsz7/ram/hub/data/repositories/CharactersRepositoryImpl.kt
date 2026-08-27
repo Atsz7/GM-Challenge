@@ -13,6 +13,8 @@ import com.atsz7.ram.hub.core.data.mappers.toDomain
 import com.atsz7.ram.hub.core.data.paging.CharacterRemoteMediator
 import com.atsz7.ram.hub.core.domain.model.Character
 import com.atsz7.ram.hub.domain.repositories.CharactersRepository
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -77,8 +79,8 @@ class CharactersRepositoryImpl @Inject constructor(
         return charactersDao.getCharacterById(id).map { entity -> entity?.toDomain() }
     }
 
-    override fun observeFavoriteIds(): Flow<Set<Int>> {
-        return favoritesDao.observeFavoriteIds().map { it.toSet() }
+    override fun observeFavoriteIds(): Flow<ImmutableSet<Int>> {
+        return favoritesDao.observeFavoriteIds().map { it.toImmutableSet() }
     }
 
     override suspend fun toggleFavorite(id: Int, isFavorite: Boolean) {
