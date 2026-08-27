@@ -4,6 +4,7 @@
     <string name="characters_subtitle">Rick &amp; Morty</string>
     <string name="retry">Retry</string>
     <string name="no_search_results">No characters found</string>
+    <string name="no_favorites_found">No favorites found</string>
     <string name="characters_load_error">An error occurred while loading characters</string>
     <string name="filter_all_label">All</string>
     <string name="filter_favorites_label">Favorites</string>

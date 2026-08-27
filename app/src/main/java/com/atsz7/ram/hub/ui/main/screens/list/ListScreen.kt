@@ -30,7 +30,9 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -113,13 +115,22 @@ private fun ListContent(
                 actions = actions
             )
 
-            PullToRefreshBox(
-                isRefreshing = characters.loadState.refresh is LoadState.Loading,
-                onRefresh = {
-                    actions.onPullToRefresh()
-                    characters.refresh()
-                },
-                modifier = Modifier.weight(1f)
+            val isRefreshing = characters.loadState.refresh is LoadState.Loading
+            val pullToRefreshEnabled = !state.filter.isFavorites()
+            val pullToRefreshState = rememberPullToRefreshState()
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .pullToRefresh(
+                        isRefreshing = isRefreshing,
+                        state = pullToRefreshState,
+                        enabled = pullToRefreshEnabled,
+                        onRefresh = {
+                            actions.onPullToRefresh()
+                            characters.refresh()
+                        }
+                    )
             ) {
                 LazyColumn(
                     state = listState,
@@ -154,8 +165,17 @@ private fun ListContent(
                         characters = characters,
                         isEmptyStateActive = state.searchQuery.isNotBlank()
                                 || state.filter.isFavorites(),
+                        isFavoritesFilter = state.filter.isFavorites(),
                         favoriteIds = state.favoriteIds,
                         actions = actions
+                    )
+                }
+
+                if (pullToRefreshEnabled) {
+                    PullToRefreshDefaults.Indicator(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        isRefreshing = isRefreshing,
+                        state = pullToRefreshState
                     )
                 }
             }
@@ -217,6 +237,7 @@ private fun CharactersFilterRow(
 private fun LazyListScope.charactersListSection(
     characters: LazyPagingItems<Character>,
     isEmptyStateActive: Boolean,
+    isFavoritesFilter: Boolean,
     favoriteIds: ImmutableSet<Int>,
     actions: ListActions
 ) {
@@ -272,7 +293,13 @@ private fun LazyListScope.charactersListSection(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.no_search_results),
+                        text = stringResource(
+                            if (isFavoritesFilter) {
+                                R.string.no_favorites_found
+                            } else {
+                                R.string.no_search_results
+                            }
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
