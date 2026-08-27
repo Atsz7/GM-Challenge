@@ -115,3 +115,12 @@ common
 |------------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | **Claro**  | <img src="docs/images/screenshot_list.png" width="220" alt="Lista de personajes" />       | <img src="docs/images/screenshot_detail.png" width="220" alt="Detalle de personaje" />        |
 | **Oscuro** | <img src="docs/images/screenshot_list_dark.png" width="220" alt="Lista en modo oscuro" /> | <img src="docs/images/screenshot_detail_dark.png" width="220" alt="Detalle en modo oscuro" /> |
+
+## 🤖 CI
+
+GitHub Actions corre en cada PR a `main` ([`basic-ci.yml`](.github/workflows/basic-ci.yml)):
+
+1. Build de los 3 módulos (`assembleDebug`).
+2. Tests unitarios (`testDebugUnitTest`).
+3. Lint (`lintDebug`).
+4. Sube los reportes de lint y tests como artifacts.
