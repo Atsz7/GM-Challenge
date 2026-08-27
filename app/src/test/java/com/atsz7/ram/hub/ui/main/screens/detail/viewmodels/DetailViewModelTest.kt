@@ -1,6 +1,6 @@
 package com.atsz7.ram.hub.ui.main.screens.detail.viewmodels
 
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.domain.usecases.GetCharacterByIdUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase
 import com.atsz7.ram.hub.domain.usecases.ToggleFavoriteUseCase

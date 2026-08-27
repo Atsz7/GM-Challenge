@@ -3,7 +3,7 @@ package com.atsz7.ram.hub.ui.main.screens.list.viewmodels
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.domain.usecases.GetCharactersUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveDarkModeUseCase
 import com.atsz7.ram.hub.domain.usecases.ObserveFavoriteIdsUseCase

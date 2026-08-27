@@ -1,4 +1,4 @@
-package com.atsz7.ram.hub.core.data.paging
+package com.atsz7.ram.hub.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType

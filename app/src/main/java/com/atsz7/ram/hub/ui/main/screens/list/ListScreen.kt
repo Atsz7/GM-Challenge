@@ -53,7 +53,7 @@ import com.atsz7.ram.hub.common.ui.components.inputs.RamSearchView
 import com.atsz7.ram.hub.common.ui.components.rows.RamBasicRow
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.common.ui.components.bars.RamTopBar
 import com.atsz7.ram.hub.extensions.label
 import com.atsz7.ram.hub.ui.main.screens.list.actions.ListActions

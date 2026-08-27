@@ -8,7 +8,7 @@ import com.atsz7.ram.hub.core.data.local.daos.CharactersDao
 import com.atsz7.ram.hub.core.data.local.daos.FavoritesDao
 import com.atsz7.ram.hub.core.data.local.entities.CharacterEntity
 import com.atsz7.ram.hub.core.data.local.entities.FavoriteEntity
-import com.atsz7.ram.hub.core.data.paging.CharacterRemoteMediator
+import com.atsz7.ram.hub.data.paging.CharacterRemoteMediator
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.first
 import io.mockk.coEvery
@@ -99,36 +99,37 @@ class CharactersRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacters with a search query uses the local database search and skips remote loading`() = runTest {
+    fun `getCharacters with a search query uses the local database search and skips remote loading`() =
+        runTest {
 
-        // Given
-        val characterEntities = listOf(
-            CharacterEntity(
-                id = 1,
-                name = "Rick Sánchez",
-                nameNormalized = "rick sanchez",
-                status = "Alive",
-                specie = "Human",
-                type = "",
-                gender = "Male",
-                originName = "Earth",
-                locationName = "Earth",
-                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-                created = "2017-11-04T18:48:46.250Z"
+            // Given
+            val characterEntities = listOf(
+                CharacterEntity(
+                    id = 1,
+                    name = "Rick Sánchez",
+                    nameNormalized = "rick sanchez",
+                    status = "Alive",
+                    specie = "Human",
+                    type = "",
+                    gender = "Male",
+                    originName = "Earth",
+                    locationName = "Earth",
+                    image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
+                    created = "2017-11-04T18:48:46.250Z"
+                )
             )
-        )
-        val pagingSourceFactory = characterEntities.asPagingSourceFactory()
-        every { charactersDao.search(any()) } returns pagingSourceFactory()
+            val pagingSourceFactory = characterEntities.asPagingSourceFactory()
+            every { charactersDao.search(any()) } returns pagingSourceFactory()
 
-        // When
-        val result = repository.getCharacters(query = "rick").asSnapshot()
+            // When
+            val result = repository.getCharacters(query = "rick").asSnapshot()
 
-        // Then
-        assertEquals(1, result.size)
-        assertEquals("Rick Sánchez", result[0].name)
-        verify { charactersDao.search("rick") }
-        coVerify(exactly = 0) { remoteMediator.load(any(), any()) }
-    }
+            // Then
+            assertEquals(1, result.size)
+            assertEquals("Rick Sánchez", result[0].name)
+            verify { charactersDao.search("rick") }
+            coVerify(exactly = 0) { remoteMediator.load(any(), any()) }
+        }
 
     @Test
     fun `getCharacters with favoritesOnly and a blank query uses getFavorites`() = runTest {

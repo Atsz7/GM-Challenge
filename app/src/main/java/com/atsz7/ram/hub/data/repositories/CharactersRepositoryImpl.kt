@@ -9,9 +9,9 @@ import com.atsz7.ram.hub.core.extensions.toNormalizedSearchTerm
 import com.atsz7.ram.hub.core.data.local.daos.CharactersDao
 import com.atsz7.ram.hub.core.data.local.daos.FavoritesDao
 import com.atsz7.ram.hub.core.data.local.entities.FavoriteEntity
-import com.atsz7.ram.hub.core.data.mappers.toDomain
-import com.atsz7.ram.hub.core.data.paging.CharacterRemoteMediator
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.data.mappers.toDomain
+import com.atsz7.ram.hub.data.paging.CharacterRemoteMediator
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.domain.repositories.CharactersRepository
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toImmutableSet

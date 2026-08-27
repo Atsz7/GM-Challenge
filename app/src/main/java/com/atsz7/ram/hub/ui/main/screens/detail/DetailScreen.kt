@@ -45,7 +45,7 @@ import com.atsz7.ram.hub.common.ui.components.buttons.RamCircleIconButton
 import com.atsz7.ram.hub.common.ui.components.rows.StatusBadge
 import com.atsz7.ram.hub.common.ui.theme.RamHubTheme
 import com.atsz7.ram.hub.common.utils.getShapeByIndex
-import com.atsz7.ram.hub.core.domain.model.Character
+import com.atsz7.ram.hub.domain.model.Character
 import com.atsz7.ram.hub.ui.main.screens.detail.actions.DetailActions
 import com.atsz7.ram.hub.ui.main.screens.detail.actions.rememberDetailActions
 import com.atsz7.ram.hub.ui.main.screens.detail.coordinator.DetailCoordinator
